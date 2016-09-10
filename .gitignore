@@ -10,3 +10,5 @@ data/interim/*
 models/raw/*
 models/processed/*
 !.gitkeep
+
+.ipynb_checkpoints
