@@ -10,11 +10,11 @@ from optparse import OptionParser
 import scipy as sp
 
 parser = OptionParser()
-parser.add_option("--xtrain", default="data/interim/X_train_features_1.csv")
-parser.add_option("--ytrain", default="data/raw/Y_train.csv")
-parser.add_option("--xval",   default="data/interim/X_train_features_1.csv")
-parser.add_option("--yval",   default="data/raw/Y_train.csv")
-parser.add_option("--xtest",  default="data/interim/X_test_features_1.csv")
+parser.add_option("--xtrain", default="data/processed/X_TrainSplit_4.csv")
+parser.add_option("--ytrain", default="data/processed/Y_TrainSplit_4.csv")
+parser.add_option("--xval",   default="data/processed/X_ValSplit_4.csv")
+parser.add_option("--yval",   default="data/processed/Y_ValSplit_4.csv")
+parser.add_option("--xtest",  default="data/processed/X_test_4.csv")
 
 parser.add_option("--dirpred",  default="data/prediction")
 parser.add_option("--dirmodel", default="models")
@@ -56,7 +56,7 @@ param = {}
 param['objective']        = 'binary:logistic'
 param['eval_metric']      = 'logloss'
 param['silent']           = 1
-param['nthread']          = 4
+param['nthread']          = 1
 
 param['seed']             = options.seed
 param['eta']              = options.eta
@@ -72,9 +72,10 @@ param['max_delta_step']   = options.max_delta_step
 param['alpha']            = options.alpha
 param['lambda']           = options.lambdaa
 
-Xtrain = pd.read_csv(options.xtrain, index_col=0)
-Xval   = pd.read_csv(options.xval,   index_col=0)
-Xtest  = pd.read_csv(options.xtest,  index_col=0)
+print 'Loading data...'
+Xtrain = pd.read_csv(options.xtrain)  #, index_col=0)
+Xval   = pd.read_csv(options.xval)    #,index_col=0)
+Xtest  = pd.read_csv(options.xtest)   #,index_col=0)
 Ytrain = pd.read_csv(options.ytrain)['Converted']
 Yval   = pd.read_csv(options.yval)['Converted']
 

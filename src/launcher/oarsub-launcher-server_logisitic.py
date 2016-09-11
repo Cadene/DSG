@@ -185,37 +185,23 @@ signal.signal(signal.SIGINT, signal.SIG_IGN)
 parameters = {}
 
 #folder
-parameters['-dirpred'] = ['data/prediction/xgboost_4']
-parameters['-dirmodel'] = ['models/xgboost_4']
-parameters['-dirlog'] = ['logs/xgboost_4']
+parameters['-dirpred'] = ['data/prediction/logistic']
+parameters['-dirmodel'] = ['models/logistic']
+parameters['-dirlog'] = ['logs/logistic']
 
 #initialiation
-parameters['-seed'] = [2]
+parameters['-random_state'] = [2]
 
 #learning parameters
-parameters['-nepoch'] = [150]
-parameters['-eta'] = [0.2,0.1,0.08]
-
-#tree specific
-parameters['-max_depth'] = [2,3,4]
-parameters['-min_child_weight'] = [1]
-parameters['-gamma'] = [0.1]
-parameters['-subsample'] = [0.4,0.8]
-parameters['-colsample_bytree'] = [0.4,0.8]
-
-#class unbalance
-parameters['-max_delta_step'] = [10.,13.,15.]
-parameters['-scale_pos_weight'] = [5.]
-#regularization
-parameters['-alpha'] = [0.]
-parameters['-lambdaa'] = [0.]
+parameters['-C'] = [0.1,1,2,3,4,5,6,7,8,9,10]
+parameters['-class_weight'] = ['balanced', None]
 
 
 
-GS = OARGridSearch('sh src/launcher/launcher.sh')
+GS = OARGridSearch('sh src/launcher/launcher_remi_logistic.sh')
 GS.set_parameters(parameters)
 cmds = GS.compute_cmd()
 serv = OARSubPersonalServer(20)
 for cmd in cmds:
-	serv.add('sh src/launcher/launcher.sh',cmd)
+	serv.add('sh src/launcher/launcher_remi_logistic.sh',cmd)
 serv.start()

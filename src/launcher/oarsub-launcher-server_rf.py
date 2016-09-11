@@ -212,10 +212,10 @@ parameters['-lambdaa'] = [0.]
 
 
 
-GS = OARGridSearch('sh src/launcher/launcher.sh')
+GS = OARGridSearch('sh src/launcher/launcher_remi_rf.sh')
 GS.set_parameters(parameters)
 cmds = GS.compute_cmd()
 serv = OARSubPersonalServer(20)
 for cmd in cmds:
-	serv.add('sh src/launcher/launcher.sh',cmd)
+	serv.add('sh src/launcher/launcher_remi_rf.sh',cmd)
 serv.start()
