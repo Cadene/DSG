@@ -223,7 +223,7 @@ else:
 print('after X4', int((time.time() - t_start) * 1000))
 
 if hasPrivate:
-    print(np.setdiff1d(X_train4.columns, X_private4.columns))
+    #print(np.setdiff1d(X_train4.columns, X_private4.columns))
     print(len(X_private4.columns))
 else:
     print(np.setdiff1d(X_train4.columns, X_test4.columns))

@@ -5,3 +5,7 @@
 \select@language {french}
 \defcounter {refsection}{0}\relax 
 \beamer@sectionintoc {1}{Summary}{2}{0}{1}
+\defcounter {refsection}{0}\relax 
+\beamer@sectionintoc {2}{Results}{3}{0}{2}
+\defcounter {refsection}{0}\relax 
+\beamer@sectionintoc {3}{Some quick observations}{4}{0}{3}

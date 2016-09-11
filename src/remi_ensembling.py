@@ -15,15 +15,16 @@ from optparse import OptionParser
 from  sklearn.linear_model import LogisticRegression
 parser = OptionParser()
 parser.add_option("--log_folder", default ="logs/xgboost_4")
-parser.add_option("--xtest", default="data/processed/X_test_4.csv")
-#parser.add_option("--xtest", default="data/processed/X_private_4.csv")
+#parser.add_option("--xtest", default="data/processed/X_test_4.csv")
+parser.add_option("--xtest", default="data/processed/X_private_4.csv")
 parser.add_option("--k_best", default = 25)
-parser.add_option("--path_pred", default='data/prediction/ensembling/Y_test.predict')
-#parser.add_option("--path_pred", default='data/prediction/ensembling/Y_private.predict')
+#parser.add_option("--path_pred", default='data/prediction/ensembling/Y_test.predict')
+parser.add_option("--path_pred", default='data/prediction/ensembling/Y_private.predict')
 options, args = parser.parse_args()
 csv_files = [join(options.log_folder, f) for f in listdir(options.log_folder) if isfile(join(options.log_folder, f))]
 
 Xtest  = pd.read_csv(options.xtest)
+Xtest.drop(['AffinityCodeId_60.0'], axis=1, inplace=True)
 xg_test  = xgb.DMatrix(np.array(Xtest))
 
 
