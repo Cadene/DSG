@@ -13,6 +13,7 @@ import keras
 from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.optimizers import SGD
+from keras.optimizers import Adam
 from keras.wrappers.scikit_learn import KerasRegressor
 #from keras.utils.np_utils import to_categorical
 
@@ -71,18 +72,25 @@ class LossHistory(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
         pred_Ytrain = clf.predict_proba(Xtrain, batch_size=options.batch_size)
         pred_Ytrain = pred_Ytrain.reshape(pred_Ytrain.shape[0])
+        print('')
+        print('')
         pred_Yval   = clf.predict_proba(Xval, batch_size=options.batch_size)
         pred_Yval = pred_Yval.reshape(pred_Yval.shape[0])
+        print('')
+        print('')
         print('\n\nloss train', logloss(Ytrain, pred_Ytrain))
         print('\n\nloss val',   logloss(Yval, pred_Yval))
 
 
 history = LossHistory()
-optimizer = SGD(lr=options.lr, momentum=0.9, decay=options.decay, nesterov=True)
+#optimizer = SGD(lr=options.lr, momentum=0.9, decay=options.decay, nesterov=True)
+optimizer = Adam(lr=options.lr)
 clf.compile(loss='binary_crossentropy', optimizer=optimizer)
 
 print('\nBefore clf.fit', int((time.time() - t_start) * 1000))
 clf.fit(Xtrain, Ytrain, nb_epoch=options.nb_epoch, batch_size=options.batch_size, callbacks=[history])
+print('')
+print('')
 print('\nAfter clf.fit', int((time.time() - t_start) * 1000))
 
 int_key    = np.random.randint(1,10000)
@@ -100,9 +108,12 @@ print('\nBefore clf.predict train val', int((time.time() - t_start) * 1000))
 
 pred_Ytrain = clf.predict_proba(Xtrain, batch_size=options.batch_size)
 pred_Ytrain = pred_Ytrain.reshape(pred_Ytrain.shape[0])
+print('')
+print('')
 pred_Yval   = clf.predict_proba(Xval, batch_size=options.batch_size)
 pred_Yval = pred_Yval.reshape(pred_Yval.shape[0])
-
+print('')
+print('')
 print('The end')
 
 log_info['train_score'] = [logloss(Ytrain, pred_Ytrain)]

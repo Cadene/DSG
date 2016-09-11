@@ -4,4 +4,4 @@
 \defcounter {refsection}{0}\relax 
 \select@language {french}
 \defcounter {refsection}{0}\relax 
-\beamer@sectionintoc {1}{Introduction}{2}{0}{1}
+\beamer@sectionintoc {1}{Summary}{2}{0}{1}
