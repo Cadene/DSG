@@ -6,9 +6,19 @@ data/raw/*
 data/processed/*
 data/features/*
 data/interim/*
+data/prediction/*
+logs/*
 # Exclude models
+models/*
 models/raw/*
 models/processed/*
 !.gitkeep
+<<<<<<< HEAD
 
 .ipynb_checkpoints
+=======
+OAR*
+.ipynb_checkpoints
+*~
+._*
+>>>>>>> 3ddfdc77aa6ca656dc7048b280a539359285f2c6

@@ -64,7 +64,11 @@ def add_new_categorical(X):
     add_dummies(frames, newCategory_df, 'AffinityCodeId')
     return pd.concat(frames, axis=1)
 
+<<<<<<< HEAD
 def extract_features(X, cols_categorical, cols_continuous, cols_customer):
+=======
+def extract_features(X, cols_categorical, cols_continuous, cols_last_stats):
+>>>>>>> 3ddfdc77aa6ca656dc7048b280a539359285f2c6
     frames = []
 
     for col in cols_categorical:
@@ -73,7 +77,11 @@ def extract_features(X, cols_categorical, cols_continuous, cols_customer):
     for col in cols_continuous:
         frames.append(X[col])
 
+<<<<<<< HEAD
     frames.append(add_features_broker_train(X))
+=======
+    frames.append(add_features_broker(X))
+>>>>>>> 3ddfdc77aa6ca656dc7048b280a539359285f2c6
     frames.append(add_features_global(X))
     frames.append(add_new_categorical(X))
 
@@ -136,6 +144,7 @@ Y_train = pd.read_csv('data/raw/Y_train.csv', index_col=0)
 if False:
     X_train2 = X_train.loc[0:1000]
     X_test2 = X_test.loc[0:1000]
+<<<<<<< HEAD
 else:
     X_train2 = X_train
     X_test2  = X_test
@@ -162,6 +171,37 @@ print('brefore X_train3', int((time.time() - t_start) * 1000))
 X_train3 = extract_features(X_train2, cols_categorical, cols_continuous, cols_customer, meanConvertedByBroker, stdConvertedByBroker)
 print('brefore X_test3', int((time.time() - t_start) * 1000))
 X_test3  = extract_features(X_test2, cols_categorical, cols_continuous, cols_customer, meanConvertedByBroker, stdConvertedByBroker)
+=======
+    Y_train2 = Y_train.loc[0:1000]
+else:
+    X_train2 = X_train
+    X_test2  = X_test
+    Y_train2 = Y_train
+
+# warnin work with X_train2
+
+X_train2 = pd.concat([X_train2, Y_train2], axis=1, join='inner')
+X_train2.SCID.fillna('NULL',inplace=True)
+
+X_full2 = pd.concat([X_train2, X_test2])
+#X_full = pd.concat([X_train2, X_test2, X_private2])
+centrer_reduire(X_full2, X_train2, X_test2, cols_continuous)
+
+# globals for train features
+meanConvertedByBroker = X_train2.groupby(X_train2.SCID).mean().Converted
+stdConvertedByBroker  = X_train2.groupby(X_train2.SCID).sum().Converted
+
+# globals for global features
+countNbQuotesBySCID = X_full2.groupby('SCID').count().CustomerMD5Key
+countNbUsersBySCID = X_full2.groupby('SCID').CustomerMD5Key.nunique()
+countSocioDemographicId = X_full2.groupby('SocioDemographicId').count().CustomerMD5Key
+countAffinityCodeId = X_full2.groupby('AffinityCodeId').count().CustomerMD5Key    
+
+print('before X_train3', int((time.time() - t_start) * 1000))
+X_train3 = extract_features(X_train2, cols_categorical, cols_continuous, cols_last_stats)
+print('before X_test3', int((time.time() - t_start) * 1000))
+X_test3  = extract_features(X_test2, cols_categorical, cols_continuous, cols_last_stats)
+>>>>>>> 3ddfdc77aa6ca656dc7048b280a539359285f2c6
 print('after X_test3', int((time.time() - t_start) * 1000))
 
 print(np.setdiff1d(X_train3.columns, X_test3.columns))
