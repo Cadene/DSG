@@ -185,37 +185,25 @@ signal.signal(signal.SIGINT, signal.SIG_IGN)
 parameters = {}
 
 #folder
-parameters['-dirpred'] = ['data/prediction/xgboost_4']
-parameters['-dirmodel'] = ['models/xgboost_4']
-parameters['-dirlog'] = ['logs/xgboost_4']
+parameters['-dirpred'] = ['data/prediction/randomforest']
+parameters['-dirmodel'] = ['models/randomforest']
+parameters['-dirlog'] = ['logs/randomforest']
 
 #initialiation
-parameters['-seed'] = [2]
-
-#learning parameters
-parameters['-nepoch'] = [150]
-parameters['-eta'] = [0.2,0.1,0.08]
+parameters['-random_state'] = [2]
 
 #tree specific
-parameters['-max_depth'] = [2,3,4]
-parameters['-min_child_weight'] = [1]
-parameters['-gamma'] = [0.1]
-parameters['-subsample'] = [0.4,0.8]
-parameters['-colsample_bytree'] = [0.4,0.8]
-
-#class unbalance
-parameters['-max_delta_step'] = [10.,13.,15.]
-parameters['-scale_pos_weight'] = [5.]
-#regularization
-parameters['-alpha'] = [0.]
-parameters['-lambdaa'] = [0.]
+parameters['-n_estimators'] = [50,100,200,400]
+parameters['-max_depth'] = ['None', 2,4,8,16]
+parameters['-min_samples_split'] = [2,4,8]
+parameters['-max_features'] = ['auto', 'sqrt', 'log2']
 
 
 
 GS = OARGridSearch('sh src/launcher/launcher_remi_rf.sh')
 GS.set_parameters(parameters)
 cmds = GS.compute_cmd()
-serv = OARSubPersonalServer(20)
+serv = OARSubPersonalServer(40)
 for cmd in cmds:
 	serv.add('sh src/launcher/launcher_remi_rf.sh',cmd)
 serv.start()

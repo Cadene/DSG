@@ -194,8 +194,7 @@ parameters['-random_state'] = [2]
 
 #learning parameters
 parameters['-C'] = [0.1,1,2,3,4,5,6,7,8,9,10]
-parameters['-class_weight'] = ['balanced', None]
-
+parameters['-class_weight'] = ['balanced', 'None']
 
 
 GS = OARGridSearch('sh src/launcher/launcher_remi_logistic.sh')

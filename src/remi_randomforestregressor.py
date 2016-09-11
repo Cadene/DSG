@@ -22,18 +22,18 @@ parser.add_option("--dirpred",  default="data/prediction/randomforest")
 parser.add_option("--dirmodel", default="models/randomforest")
 parser.add_option("--dirlog",   default="logs/randomforest")
 
-parser.add_option('--n_estimators',  default=10)
+parser.add_option('--n_estimators',  default=10, type='int')
 parser.add_option('--criterion',     default='mse')
 parser.add_option('--max_features',  default='auto')
 parser.add_option('--max_depth',     default=None)
-parser.add_option('--min_samples_split',     default=2)
-parser.add_option('--min_samples_leaf',     default=1)
-parser.add_option('--min_weight_fraction_leaf',     default=0.)
-parser.add_option('--max_leaf_nodes',     default=2)
+parser.add_option('--min_samples_split',     default=2, type='float')
+parser.add_option('--min_samples_leaf',     default=1, type='float')
+parser.add_option('--min_weight_fraction_leaf',     default=0., type='float')
+parser.add_option('--max_leaf_nodes',     default=2, type='float')
 parser.add_option('--bootstrap',     default=True)
 parser.add_option('--oob_score',     default=False)
-parser.add_option('--n_jobs',     default=1)
-parser.add_option('--random_state',     default=1)
+parser.add_option('--n_jobs',     default=1, type='float')
+parser.add_option('--random_state',     default=1, type='int')
 
 options, args = parser.parse_args()
 list_opt = vars(options)
@@ -54,6 +54,11 @@ Xtest  = pd.read_csv(options.xtest)
 Ytrain = pd.read_csv(options.ytrain)['Converted']
 Yval   = pd.read_csv(options.yval)['Converted']
 print('After read_csv', int((time.time() - t_start) * 1000))
+
+if options.max_depth == "None":
+    options.max_depth = None
+else:
+    options.max_depth = int(options.max_depth)
 
 print 'Fitting...'
 clf = RandomForestRegressor(

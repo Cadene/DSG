@@ -1,0 +1,80 @@
+\documentclass[compress,xcolor=table,11pt]{beamer}
+
+% Packages
+\usepackage[english, french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{datetime}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{wrapfig}
+\usepackage{array}
+\usepackage{setspace}
+
+\usepackage{float} % add option H for table
+\usepackage{subcaption} % add subfigure and subcaption, see package options
+
+% Possible options:
+%  - nosectionpages: no pages between sections
+%  - flama: use flama font, requires xelatex/lualatex to compile
+%  - compressminiframes: put the heading list bullets indications pages on 1 line
+\iffalse
+\usepackage{fontspec}
+\setmainfont[
+    Path           = font/,
+    Extension      = .otf,
+    Ligatures      = TeX,
+    BoldFont       = Flama-Bold,
+    ItalicFont     = Flama-BasicItalic,
+    BoldItalicFont = Flama-BoldItalic
+]{Flama-Light}
+\fi
+%\usetheme[nosectionpages, flama]{upmc}
+\usetheme[nosectionpages]{upmc}
+
+\definecolor{hsrmSec3Comp}{rgb}{1,0.509803922,0}
+\definecolor{hsrmSec3CompDark}{rgb}{0.666666667,0.333333333,0}
+
+% Title page
+\title{Jonquille - UPMC}
+\foottitle{Jonquille - UPMC} % optional, by default same as title
+\subtitle{ } % optional
+\date{\formatdate{13}{06}{2016}}
+\author{Edouard, Mickael,  Remi, Thomas}
+\institute{Master DAC - Université Pierre et Marie Curie - MLIA - LIP6}
+
+% Biblatex
+\usepackage[backend=bibtex,
+style=authoryear,
+citestyle=authoryear]{biblatex}
+\bibliography{library.bib}
+\AtEveryBibitem{%
+	\clearfield{urldate}%
+	\clearfield{urlday}%
+	\clearfield{urlmonth}%
+	\clearfield{urlyear}%
+	\clearfield{doi}%
+	\clearfield{issn}%
+	\clearfield{isbn}%
+	\clearfield{pagetotal}%
+	\clearfield{url}%
+	\clearfield{timestamp}%
+}
+\AtEveryCitekey{\UseBibitemHook}
+\renewcommand*{\bibfont}{\footnotesize}
+\let\oldcite\cite
+\renewcommand{\cite}[1]{[\oldcite{#1}]}
+
+\def\tightlist{}
+
+\begin{document}
+
+
+\begin{frame}[plain]
+	\titlepage
+	\setcounter{framenumber}{0}
+\end{frame}
+
+\input{slides.tex}
+
+\end{document}

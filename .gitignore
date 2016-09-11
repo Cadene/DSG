@@ -16,3 +16,4 @@ models/processed/*
 OAR*
 .ipynb_checkpoints
 *~
+._*

@@ -22,7 +22,7 @@ parser.add_option("--dirpred",  default="data/prediction/logistic")
 parser.add_option("--dirmodel", default="models/logistic")
 parser.add_option("--dirlog",   default="logs/logistic")
 
-parser.add_option('--random_state',  default=1, type='int') # seed
+parser.add_option('--random_state',  default=1, type='float') # seed
 
 #parser.add_option("--penalty",      default="l2")
 #parser.add_option("--dual",         default=False)
@@ -54,8 +54,8 @@ Ytrain = pd.read_csv(options.ytrain)['Converted']
 Yval   = pd.read_csv(options.yval)['Converted']
 print('After read_csv', int((time.time() - t_start) * 1000))
 
-if options.class_weight == "None":
-    options.class_weight = None
+if option.class_weight == "None":
+    option.class_weight = None
 
 print 'Fitting...'
 clf = LogisticRegression(

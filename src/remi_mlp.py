@@ -9,6 +9,7 @@ import scipy as sp
 import time
 t_start = time.time()
 
+import keras
 from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.optimizers import SGD
@@ -27,7 +28,10 @@ parser.add_option("--dirpred",  default="data/prediction/mlp")
 parser.add_option("--dirmodel", default="models/mlp")
 parser.add_option("--dirlog",   default="logs/mlp")
 
-parser.add_option('--nb_epoch',  default=1)
+parser.add_option('--lr',  default=0.1)
+parser.add_option('--decay',  default=0)
+
+parser.add_option('--nb_epoch',  default=5)
 parser.add_option('--batch_size',  default=256)
 
 options, args = parser.parse_args()
@@ -43,11 +47,11 @@ def logloss(act, pred):
 
 print 'Loading data...'
 print('Before read_csv', int((time.time() - t_start) * 1000))
-Xtrain = pd.read_csv(options.xtrain)
-Xval   = pd.read_csv(options.xval)
-Xtest  = pd.read_csv(options.xtest)
-Ytrain = pd.read_csv(options.ytrain)['Converted']
-Yval   = pd.read_csv(options.yval)['Converted']
+Xtrain = pd.read_csv(options.xtrain).as_matrix()
+Xval   = pd.read_csv(options.xval).as_matrix()
+Xtest  = pd.read_csv(options.xtest).as_matrix()
+Ytrain = pd.read_csv(options.ytrain)['Converted'].as_matrix()
+Yval   = pd.read_csv(options.yval)['Converted'].as_matrix()
 #Ytrain = to_categorical(Ytrain)
 #Yval   = to_categorical(Yval)
 print('After read_csv', int((time.time() - t_start) * 1000))
@@ -56,16 +60,30 @@ print(Xtrain.shape)
 
 print 'Fitting...'
 clf = Sequential()
-clf.add(Dense(output_dim=20, input_dim=142))
+clf.add(Dense(output_dim=10, input_dim=142))
 clf.add(Activation("relu"))
+# clf.add(Dense(output_dim=30))
+# clf.add(Activation("relu"))
 clf.add(Dense(output_dim=1))
-clf.add(Activation("softmax"))
+clf.add(Activation("sigmoid"))
 
-clf.compile(loss='mean_squared_error', optimizer=SGD(lr=0.01, momentum=0.9, nesterov=True))
+class LossHistory(keras.callbacks.Callback):
+    def on_epoch_end(self, epoch, logs={}):
+        pred_Ytrain = clf.predict_proba(Xtrain, batch_size=options.batch_size)
+        pred_Ytrain = pred_Ytrain.reshape(pred_Ytrain.shape[0])
+        pred_Yval   = clf.predict_proba(Xval, batch_size=options.batch_size)
+        pred_Yval = pred_Yval.reshape(pred_Yval.shape[0])
+        print('\n\nloss train', logloss(Ytrain, pred_Ytrain))
+        print('\n\nloss val',   logloss(Yval, pred_Yval))
 
-print('Before clf.fit', int((time.time() - t_start) * 1000))
-clf.fit(Xtrain, Ytrain, nb_epoch=options.nb_epoch, batch_size=options.batch_size)
-print('After clf.fit', int((time.time() - t_start) * 1000))
+
+history = LossHistory()
+optimizer = SGD(lr=options.lr, momentum=0.9, decay=options.decay, nesterov=True)
+clf.compile(loss='binary_crossentropy', optimizer=optimizer)
+
+print('\nBefore clf.fit', int((time.time() - t_start) * 1000))
+clf.fit(Xtrain, Ytrain, nb_epoch=options.nb_epoch, batch_size=options.batch_size, callbacks=[history])
+print('\nAfter clf.fit', int((time.time() - t_start) * 1000))
 
 int_key    = np.random.randint(1,10000)
 date_key   = os.times()[4] * 10
@@ -77,10 +95,21 @@ log_info = list_opt
 log_info['path_log']    = path_log
 log_info['path_model']  = path_model
 log_info['path_pred']   = path_pred
-print('Before clf.predict train val', int((time.time() - t_start) * 1000))
-log_info['train_score'] = [logloss(Ytrain, clf.predict_proba(Xtrain, batch_size=options.batch_size))]
-log_info['val_score']   = [logloss(Yval,   clf.predict_proba(Xval, batch_size=options.batch_size))]
-print('After clf.predict train val', int((time.time() - t_start) * 1000))
+print('\nBefore clf.predict train val', int((time.time() - t_start) * 1000))
+
+
+pred_Ytrain = clf.predict_proba(Xtrain, batch_size=options.batch_size)
+pred_Ytrain = pred_Ytrain.reshape(pred_Ytrain.shape[0])
+pred_Yval   = clf.predict_proba(Xval, batch_size=options.batch_size)
+pred_Yval = pred_Yval.reshape(pred_Yval.shape[0])
+
+print('The end')
+
+log_info['train_score'] = [logloss(Ytrain, pred_Ytrain)]
+print('\ntrain score', log_info['train_score'])
+log_info['val_score']   = [logloss(Yval, pred_Yval)]
+print('\nval score', log_info['val_score'])
+print('\nAfter clf.predict train val', int((time.time() - t_start) * 1000))
 
 print("Saving the log to " + path_log)
 df_log_info = pd.DataFrame(log_info)
